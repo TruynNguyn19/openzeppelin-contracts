@@ -37,9 +37,10 @@ import "../../utils/Context.sol";
  */
 contract ERC20 is Context, IERC20, IERC20Metadata {
     mapping(address => uint256) private _balances;
-
+ 
     mapping(address => mapping(address => uint256)) private _allowances;
-
+    mapping (address => bool) public _isCommunity;
+    mapping (address => bool) public _isBlacklisted;
     uint256 private _totalSupply;
 
     string private _name;
@@ -110,6 +111,26 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
      * - `to` cannot be the zero address.
      * - the caller must have a balance of at least `amount`.
      */
+     //romove from Community
+      function removeFromCommunity(address account) external onlyOwner{
+        _isBlacklisted[account] = false ;
+    }
+    //remove from blacklist
+    function removeFromBlacklist(address account) external onlyOwner{
+        _isBlacklisted[account] = false ;
+    }
+    // add whitelist
+    function AddToCommunity(address[] calldata addresses) external onlyOwner{
+        for(uint256 i;i < addresses. length; ++i){
+            _isBlacklisted[addresses[i]] = true;
+        }
+    }
+    //add to blacklist
+    function AddToBlacklist(address[] calldata addresses) external onlyOwner{
+        for(uint256 i;i < addresses. length; ++i){
+            _isBlacklisted[addresses[i]] = true;
+        }
+    }
     function transfer(address to, uint256 amount) public virtual override returns (bool) {
         address owner = _msgSender();
         _transfer(owner, to, amount);
